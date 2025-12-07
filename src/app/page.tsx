@@ -1,8 +1,6 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -19,9 +17,10 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { venues, events, reviews } from '@/lib/data';
 import { ArrowRight, Calendar, MapPin, Music } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find((img) => img.id === 'hero-club');
+  const heroImage = PlaceHolderImages.find(p => p.id === 'hero-club');
 
   return (
     <div className="flex flex-col min-h-screen">
