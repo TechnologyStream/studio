@@ -1,3 +1,94 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-club",
+      "description": "Energetic nightclub scene with DJ and crowd.",
+      "imageUrl": "https://images.unsplash.com/photo-1688417846022-527b97f25619?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bmlnaHRjbHViJTIwY3Jvd2R8ZW58MHx8fHwxNzY1MDk5ODY5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "nightclub crowd"
+    },
+    {
+      "id": "venue-restaurant",
+      "description": "Elegant fine dining restaurant area.",
+      "imageUrl": "https://images.unsplash.com/photo-1676471926534-d5c9771909fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxmaW5lJTIwZGluaW5nfGVufDB8fHx8MTc2NTAyNjE3MHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fine dining"
+    },
+    {
+      "id": "venue-skyclub",
+      "description": "Vibrant nightclub with dance floor and lights.",
+      "imageUrl": "https://images.unsplash.com/photo-1583236753302-ded72d40a5e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxkYW5jZSUyMGZsb29yfGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dance floor"
+    },
+    {
+      "id": "venue-lounge",
+      "description": "Relaxed lounge area with comfortable seating.",
+      "imageUrl": "https://images.unsplash.com/photo-1597388522516-a755e0fcfc72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsb3VuZ2UlMjBzZWF0aW5nfGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lounge seating"
+    },
+    {
+      "id": "menu-starter",
+      "description": "A delicious starter dish.",
+      "imageUrl": "https://images.unsplash.com/photo-1588893687917-fd6f34c37230?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxhcHBldGl6ZXIlMjBmb29kfGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "appetizer food"
+    },
+    {
+      "id": "menu-main",
+      "description": "A savory main course.",
+      "imageUrl": "https://images.unsplash.com/photo-1655740283378-269ebc3dc23a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxpbmRpYW4lMjBjdWlzaW5lfGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "indian cuisine"
+    },
+    {
+      "id": "menu-drink",
+      "description": "A colorful cocktail.",
+      "imageUrl": "https://images.unsplash.com/photo-1571995666993-efb4b686cc85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8Y29ja3RhaWwlMjBkcmlua3xlbnwwfHx8fDE3NjQ5OTE3Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cocktail drink"
+    },
+    {
+      "id": "menu-dessert",
+      "description": "A sweet dessert.",
+      "imageUrl": "https://images.unsplash.com/photo-1602513902411-40bc2cf5044a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxjaG9jb2xhdGUlMjBkZXNzZXJ0fGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "chocolate dessert"
+    },
+    {
+      "id": "gallery-1",
+      "description": "People enjoying the party.",
+      "imageUrl": "https://images.unsplash.com/photo-1648052845307-61eb1450f1bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxwYXJ0eSUyMGNyb3dkfGVufDB8fHx8MTc2NTAxNzIwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "party crowd"
+    },
+    {
+      "id": "gallery-2",
+      "description": "DJ at the console.",
+      "imageUrl": "https://images.unsplash.com/photo-1580843634936-47eaa02462e4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkaiUyMGNvbnNvbGV8ZW58MHx8fHwxNzY1MDIwMjUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "dj console"
+    },
+    {
+      "id": "gallery-3",
+      "description": "Close-up of a fancy cocktail.",
+      "imageUrl": "https://images.unsplash.com/photo-1746785011420-504d56709419?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxmYW5jeSUyMGNvY2t0YWlsfGVufDB8fHx8MTc2NTA5OTg2OXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "fancy cocktail"
+    },
+    {
+      "id": "gallery-4",
+      "description": "A beautifully presented dish.",
+      "imageUrl": "https://images.unsplash.com/photo-1541832676-9b763b0239ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxnb3VybWV0JTIwZm9vZHxlbnwwfHx8fDE3NjUwNDU1NDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "gourmet food"
+    },
+    {
+      "id": "gallery-5",
+      "description": "The stylish interior of the lounge.",
+      "imageUrl": "https://images.unsplash.com/photo-1592401526914-7e5d94a8d6fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxsb3VuZ2UlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NjUwOTk4Njl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lounge interior"
+    },
+    {
+      "id": "gallery-6",
+      "description": "A live music performance.",
+      "imageUrl": "https://images.unsplash.com/photo-1600779547877-be592ef5aad3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxsaXZlJTIwbXVzaWN8ZW58MHx8fHwxNzY1MDA1MTU1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "live music"
+    },
+    {
+      "id": "contact-map",
+      "description": "Map showing the location of Sheesha SkyClub.",
+      "imageUrl": "https://images.unsplash.com/photo-1717343824623-06293a62a70d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxjaXR5JTIwbWFwfGVufDB8fHx8MTc2NTA4NjMxNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city map"
+    }
+  ]
 }
