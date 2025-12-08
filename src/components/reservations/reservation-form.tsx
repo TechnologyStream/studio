@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,10 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '../ui/card';
+import { createReservation } from '@/app/reservations/actions';
+import { useUser, useAuth } from '@/firebase';
+import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -54,9 +59,21 @@ const formSchema = z.object({
   }),
 });
 
+export type ReservationFormValues = z.infer<typeof formSchema>;
+
 export default function ReservationForm() {
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isUserLoading && !user) {
+      initiateAnonymousSignIn(auth);
+    }
+  }, [user, isUserLoading, auth]);
+
+  const form = useForm<ReservationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
@@ -65,13 +82,35 @@ export default function ReservationForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    toast({
-      title: 'Reservation Confirmed!',
-      description: `Thank you, ${values.name}! Your table for ${values.partySize} is booked for ${format(values.date, 'PPP')} at ${values.time}.`,
-    });
-    form.reset();
+  async function onSubmit(values: ReservationFormValues) {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: 'Authentication Error',
+        description: 'You must be signed in to make a reservation. Please wait a moment and try again.',
+      });
+      if (!isUserLoading) {
+        initiateAnonymousSignIn(auth);
+      }
+      return;
+    }
+
+    const result = await createReservation(values, user.uid);
+
+    if (result.success) {
+      toast({
+        title: 'Reservation Confirmed!',
+        description: `Thank you, ${values.name}! Your table for ${values.partySize} is booked for ${format(values.date, 'PPP')} at ${values.time}.`,
+      });
+      form.reset();
+      router.push('/');
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Uh oh! Something went wrong.',
+        description: result.error || 'Could not save your reservation. Please try again.',
+      });
+    }
   }
 
   return (
@@ -206,7 +245,9 @@ export default function ReservationForm() {
               />
             </div>
             
-            <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" size="lg">Confirm Reservation</Button>
+            <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90" size="lg" disabled={form.formState.isSubmitting || isUserLoading}>
+              {form.formState.isSubmitting ? 'Confirming...' : 'Confirm Reservation'}
+            </Button>
           </form>
         </Form>
       </CardContent>
