@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  CardContent,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +19,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { venues, events, reviews } from '@/lib/data';
 import { ArrowRight, Calendar, MapPin, Music } from 'lucide-react';
 import Image from 'next/image';
+import { HeroCarousel } from '@/components/common/hero-carousel';
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-1');
@@ -27,16 +28,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen">
       <main className="flex-1">
         <section className="relative h-screen w-full">
-          {heroImage && (
-             <Image
-                src={heroImage.imageUrl}
-                alt={heroImage.description}
-                fill
-                className="object-cover"
-                priority
-                data-ai-hint={heroImage.imageHint}
-              />
-          )}
+          <HeroCarousel />
           <div className="absolute inset-0 bg-black/60" />
           <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white">
             <h1 className="font-headline text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl lg:text-7xl">
