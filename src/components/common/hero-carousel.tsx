@@ -6,6 +6,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from '@/components/ui/carousel';
 import Autoplay from 'embla-carousel-autoplay';
 
@@ -21,7 +23,7 @@ export function HeroCarousel() {
         plugins={[
           Autoplay({
             delay: 5000,
-            stopOnInteraction: false,
+            stopOnInteraction: true,
           }),
         ]}
         opts={{
@@ -42,6 +44,8 @@ export function HeroCarousel() {
             </CarouselItem>
           ))}
         </CarouselContent>
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:flex" />
       </Carousel>
       <div className="absolute inset-0 bg-black/60" />
     </div>
