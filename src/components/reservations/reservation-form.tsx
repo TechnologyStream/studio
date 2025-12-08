@@ -259,7 +259,7 @@ export default function ReservationForm() {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a time slot" />
-                        </Trigger>
+                        </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {Array.from({ length: 12 }, (_, i) => `${i + 12}:00`).map(time => (
@@ -281,7 +281,7 @@ export default function ReservationForm() {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select party size" />
-                        </Trigger>
+                        </SelectTrigger>
                       </FormControl>
                       <SelectContent>
                         {Array.from({ length: 10 }, (_, i) => i + 1).map(size => (
