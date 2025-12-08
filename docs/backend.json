@@ -1,0 +1,448 @@
+{
+  "entities": {
+    "Restaurant": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Restaurant",
+      "type": "object",
+      "description": "Represents the restaurant entity with its core details.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the restaurant entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the restaurant."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the restaurant."
+        },
+        "location": {
+          "type": "string",
+          "description": "Address or location details of the restaurant."
+        },
+        "contactNumber": {
+          "type": "string",
+          "description": "Contact phone number of the restaurant."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the restaurant.",
+          "format": "email"
+        },
+        "operatingHours": {
+          "type": "string",
+          "description": "Operating hours of the restaurant."
+        },
+        "websiteUrl": {
+          "type": "string",
+          "description": "URL of the restaurant's website, if available.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "location",
+        "contactNumber",
+        "email",
+        "operatingHours"
+      ]
+    },
+    "MenuItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MenuItem",
+      "type": "object",
+      "description": "Represents a menu item offered by the restaurant.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the menu item."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to Restaurant. (Relationship: Restaurant 1:N MenuItem)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the menu item."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the menu item."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the menu item."
+        },
+        "category": {
+          "type": "string",
+          "description": "Category of the menu item (e.g., Appetizer, Main Course, Dessert)."
+        },
+        "dietaryTags": {
+          "type": "array",
+          "description": "Dietary tags associated with the menu item (e.g., Vegetarian, Gluten-Free).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "spiceLevel": {
+          "type": "string",
+          "description": "Spice level of the menu item (e.g., Mild, Medium, Spicy)."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the image for the menu item, stored in Firebase Storage.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "name",
+        "description",
+        "price",
+        "category"
+      ]
+    },
+    "TableReservation": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TableReservation",
+      "type": "object",
+      "description": "Represents a table reservation made by a customer.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the table reservation."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to Restaurant. (Relationship: Restaurant 1:N TableReservation)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N TableReservation)"
+        },
+        "reservationDateTime": {
+          "type": "string",
+          "description": "Date and time for the reservation.",
+          "format": "date-time"
+        },
+        "partySize": {
+          "type": "number",
+          "description": "Number of people in the party."
+        },
+        "sectionPreference": {
+          "type": "string",
+          "description": "Preferred section of the restaurant (e.g., Restaurant Area, Lounge, VIP)."
+        },
+        "specialOccasion": {
+          "type": "string",
+          "description": "Type of special occasion, if any (e.g., Birthday, Anniversary)."
+        },
+        "status": {
+          "type": "string",
+          "description": "Status of the reservation (e.g., Pending, Confirmed, Cancelled)."
+        },
+        "confirmationCode": {
+          "type": "string",
+          "description": "Code used to confirm the reservation."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "userId",
+        "reservationDateTime",
+        "partySize",
+        "status"
+      ]
+    },
+    "Event": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Event",
+      "type": "object",
+      "description": "Represents an event hosted by the restaurant.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the event."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to Restaurant. (Relationship: Restaurant 1:N Event)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the event."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the event."
+        },
+        "eventDateTime": {
+          "type": "string",
+          "description": "Date and time of the event.",
+          "format": "date-time"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location within the venue where the event is held."
+        },
+        "featuredDJs": {
+          "type": "array",
+          "description": "List of featured DJs and artists for the event.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "bookingOptions": {
+          "type": "string",
+          "description": "Details about booking options and cover charges."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the event image, stored in Firebase Storage.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "name",
+        "description",
+        "eventDateTime",
+        "location"
+      ]
+    },
+    "CustomerReview": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "CustomerReview",
+      "type": "object",
+      "description": "Represents a review submitted by a customer.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the customer review."
+        },
+        "restaurantId": {
+          "type": "string",
+          "description": "Reference to Restaurant. (Relationship: Restaurant 1:N CustomerReview)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to UserProfile. (Relationship: UserProfile 1:N CustomerReview)"
+        },
+        "rating": {
+          "type": "number",
+          "description": "Star rating given by the customer (e.g., 1 to 5)."
+        },
+        "feedback": {
+          "type": "string",
+          "description": "Detailed feedback provided by the customer."
+        },
+        "reviewDateTime": {
+          "type": "string",
+          "description": "Date and time when the review was submitted.",
+          "format": "date-time"
+        },
+        "ambienceRating": {
+          "type": "number",
+          "description": "Rating for the restaurant's ambience."
+        },
+        "foodQualityRating": {
+          "type": "number",
+          "description": "Rating for the quality of food."
+        },
+        "serviceRating": {
+          "type": "number",
+          "description": "Rating for the service provided."
+        },
+        "musicRating": {
+          "type": "number",
+          "description": "Rating for the music and DJ performance."
+        }
+      },
+      "required": [
+        "id",
+        "restaurantId",
+        "userId",
+        "rating",
+        "feedback",
+        "reviewDateTime"
+      ]
+    },
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user profile with contact information and history.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the user profile."
+        },
+        "firstName": {
+          "type": "string",
+          "description": "First name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "Last name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user.",
+          "format": "email"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "description": "Phone number of the user."
+        },
+        "bookingHistory": {
+          "type": "array",
+          "description": "List of the user's booking history.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferences": {
+          "type": "string",
+          "description": "User preferences."
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "phoneNumber"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/restaurants/{restaurantId}",
+        "definition": {
+          "entityName": "Restaurant",
+          "schema": {
+            "$ref": "#/backend/entities/Restaurant"
+          },
+          "description": "Stores restaurant details. Root level collection.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the restaurant."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/menuItems/{menuItemId}",
+        "definition": {
+          "entityName": "MenuItem",
+          "schema": {
+            "$ref": "#/backend/entities/MenuItem"
+          },
+          "description": "Stores menu items associated with a restaurant. Includes denormalized 'restaurantId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the restaurant."
+            },
+            {
+              "name": "menuItemId",
+              "description": "The unique identifier of the menu item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/tableReservations/{tableReservationId}",
+        "definition": {
+          "entityName": "TableReservation",
+          "schema": {
+            "$ref": "#/backend/entities/TableReservation"
+          },
+          "description": "Stores table reservations for a restaurant. Includes denormalized 'restaurantId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the restaurant."
+            },
+            {
+              "name": "tableReservationId",
+              "description": "The unique identifier of the table reservation."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/events/{eventId}",
+        "definition": {
+          "entityName": "Event",
+          "schema": {
+            "$ref": "#/backend/entities/Event"
+          },
+          "description": "Stores events hosted by a restaurant. Includes denormalized 'restaurantId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the restaurant."
+            },
+            {
+              "name": "eventId",
+              "description": "The unique identifier of the event."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/restaurants/{restaurantId}/customerReviews/{customerReviewId}",
+        "definition": {
+          "entityName": "CustomerReview",
+          "schema": {
+            "$ref": "#/backend/entities/CustomerReview"
+          },
+          "description": "Stores customer reviews for a restaurant. Includes denormalized 'restaurantId' for authorization independence.",
+          "params": [
+            {
+              "name": "restaurantId",
+              "description": "The unique identifier of the restaurant."
+            },
+            {
+              "name": "customerReviewId",
+              "description": "The unique identifier of the customer review."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/userProfiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores user profile information.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed to support Sheesha SkyHub's requirements for a restaurant and nightclub website. It prioritizes security, scalability, and ease of debugging, adhering to the core design principles of Authorization Independence, Clarity of Intent, DBAC (Database-Based Access Control), QAPs (Rules Are Not Filters), and Invariants. The data model leverages Structural Segregation and Access Modeling.\n\n**Authorization Independence:** Authorization is achieved by denormalizing relevant access control information into each document, eliminating the need for `get()` calls in security rules. For example, `restaurantId` is present in `MenuItem`, `TableReservation`, `Event`, and `CustomerReview` collections.\n\n**Structural Segregation:** Different data types with different access needs are stored in separate collections. User profiles are stored under `/userProfiles/{userId}`, separating them from restaurant data. This enhances security by ensuring consistent access rules within each collection.\n\n**Access Modeling:** Path-based ownership is used for user-owned data (`/userProfiles/{userId}`). The Membership Map is not applicable in the current scope, as collaborative data management is not explicitly defined. However, the structure is designed in a way that membership maps can be added to any collection that needs to introduce collaborative access control.\n\n**QAPs (Rules are not Filters):** The structure supports secure `list` operations. Because authorization data is denormalized, list operations can be secured based on the data contained within the documents themselves. For example, listing menu items for a specific restaurant can be secured by checking the `restaurantId` field.\n\n**Denormalization Strategy:**\n\n*   The `MenuItem`, `TableReservation`, `Event`, and `CustomerReview` collections include the `restaurantId`. This ensures that all documents related to a restaurant can be queried and managed independently, without needing to fetch the restaurant document itself. This is critical for authorization independence.\n\n**How the Structure Supports Core Features:**\n\n*   **Dynamic Content Display:** The structure supports a CMS by allowing flexible data storage for restaurant details, events, and menu items.\n*   **Digital Menu with AI Recommendations:** The `MenuItem` collection allows for storing detailed menu information, including dietary tags. AI-powered recommendations would likely be implemented in backend functions or services that query this data.\n*   **Table Reservation System:** The `TableReservation` collection stores reservation data, enabling the implementation of a booking system.\n*   **Event Calendar:** The `Event` collection facilitates the management of events and their associated details.\n*   **Customer Review Management:** The `CustomerReview` collection stores customer feedback and ratings.\n*   **Firebase Integration:** The structure leverages Firebase Storage by including `imageUrl` fields in `MenuItem` and `Event` entities. These URLs point to media files stored in Firebase Storage.\n*   **Contact and Location Integration:** The Restaurant entity includes contact information, facilitating location integration with services like Google Maps."
+  }
+}

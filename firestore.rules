@@ -1,0 +1,201 @@
+/**
+ * Core Philosophy:
+ * This ruleset establishes a clear security boundary between publicly accessible data
+ * and private user-specific information. The primary goal is to allow anonymous users
+ * to browse restaurant details, menus, and events, while strictly protecting user
+ * profiles and actions like making reservations or writing reviews.
+ *
+ * Data Structure:
+ * The data is organized into two main top-level collections:
+ * 1. `/restaurants/{restaurantId}`: This public-facing collection holds all data
+ *    related to a specific restaurant, including nested subcollections for menu items,
+ *    events, reviews, and reservations.
+ * 2. `/userProfiles/{userId}`: This collection stores private user data, where each
+ *    document is keyed by the user's authentication UID and is only accessible by that user.
+ *
+ * Key Security Decisions:
+ * - Public Read, Admin Write: Core restaurant data (details, menus, events) is publicly
+ *   readable by anyone, but all write operations (create, update, delete) are disallowed
+ *   at the client level. This assumes a trusted backend service or admin panel is
+ *   responsible for managing this content, providing a highly secure default.
+ * - Strict User Ownership: User profiles are strictly private. A user can only create,
+ *   read, update, or delete their own profile document. Listing user profiles is disabled.
+ * - Private Reservations: While reservations are nested under a public restaurant, access
+ *   to individual reservation documents is restricted to the user who created them. Listing
+ *   all reservations for a restaurant is disallowed to protect user privacy.
+ * - Public Reviews with Ownership: Customer reviews are publicly readable by everyone,
+ *   but creating, updating, or deleting a review is restricted to the authenticated
+ *   user who authored it.
+ *
+ * Denormalization for Authorization:
+ * To ensure fast and secure rules, authorization data is denormalized. Documents like
+ * `TableReservation` and `CustomerReview` contain a `userId` field. This allows rules
+ * to verify ownership directly from the document being accessed, avoiding slow and costly
+ * cross-document `get()` calls.
+ *
+ * Structural Segregation:
+ * User data (`userProfiles`) is stored in a completely separate collection from public
+ * restaurant data, ensuring that distinct and simple access control policies can be applied
+ * to each data type without overlap or complexity.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --------------------------------------------------------------------------------
+    // Helper Functions
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the authenticated user's UID matches the provided userId.
+     * This is the fundamental check for data ownership.
+     */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Verifies ownership for an existing document, preventing writes to non-existent paths.
+     * Use for update and delete operations.
+     */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /**
+     * Checks if the user owns a document by looking at a 'userId' field inside it.
+     */
+    function isDocumentOwner(doc) {
+      return isSignedIn() && request.auth.uid == doc.data.userId;
+    }
+
+    /**
+     * Verifies ownership of an existing document via its internal 'userId' field.
+     * Use for update and delete on documents like reviews and reservations.
+     */
+    function isExistingDocumentOwner(doc) {
+      return doc != null && isDocumentOwner(doc);
+    }
+
+    /**
+     * Validates that a user is creating content for themselves and that the
+     * restaurantId in the new document matches the parent collection's ID.
+     */
+    function isCreatingOwnContentForRestaurant(restaurantId) {
+      return isSignedIn() &&
+             request.resource.data.userId == request.auth.uid &&
+             request.resource.data.restaurantId == restaurantId;
+    }
+
+    /**
+     * Enforces immutability for critical relational fields on update.
+     * Prevents re-assigning a document to a different user or restaurant.
+     */
+    function areAssociationFieldsImmutable() {
+      return request.resource.data.userId == resource.data.userId &&
+             request.resource.data.restaurantId == resource.data.restaurantId;
+    }
+
+    // --------------------------------------------------------------------------------
+    // User Profiles
+    // --------------------------------------------------------------------------------
+
+    /**
+     * @description Manages user profiles. Only the owner can read or write their own profile.
+     * @path /userProfiles/{userId}
+     * @allow (get) An authenticated user reads their own profile: `auth.uid == 'user_abc'`, `get /userProfiles/user_abc`
+     * @deny (get) An authenticated user tries to read another user's profile: `auth.uid == 'user_abc'`, `get /userProfiles/user_xyz`
+     * @principle Restricts access to a user's own data tree.
+     */
+    match /userProfiles/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false; // Disallow listing all user profiles for privacy
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+    }
+
+    // --------------------------------------------------------------------------------
+    // Restaurants and Subcollections
+    // --------------------------------------------------------------------------------
+
+    /**
+     * @description Publicly readable restaurant information. Writes are disallowed from clients.
+     * @path /restaurants/{restaurantId}
+     * @allow (get) Any user, authenticated or not, can read restaurant details.
+     * @deny (create) Any user attempts to create a new restaurant document.
+     * @principle Public read access for general information, with writes managed by a secure backend.
+     */
+    match /restaurants/{restaurantId} {
+      allow get, list: if true;
+      allow create: if false; // Managed by a backend service/admin
+      allow update: if false; // Managed by a backend service/admin
+      allow delete: if false; // Managed by a backend service/admin
+
+      /**
+       * @description Publicly readable menu items. Writes are disallowed from clients.
+       * @path /restaurants/{restaurantId}/menuItems/{menuItemId}
+       * @allow (list) Any user can list the menu items for a restaurant.
+       * @deny (create) Any user attempts to add a menu item.
+       * @principle Public read access for general information, with writes managed by a secure backend.
+       */
+      match /menuItems/{menuItemId} {
+        allow get, list: if true;
+        allow create: if false; // Managed by a backend service/admin
+        allow update: if false; // Managed by a backend service/admin
+        allow delete: if false; // Managed by a backend service/admin
+      }
+
+      /**
+       * @description Publicly readable events. Writes are disallowed from clients.
+       * @path /restaurants/{restaurantId}/events/{eventId}
+       * @allow (list) Any user can list the events for a restaurant.
+       * @deny (create) Any user attempts to add an event.
+       * @principle Public read access for general information, with writes managed by a secure backend.
+       */
+      match /events/{eventId} {
+        allow get, list: if true;
+        allow create: if false; // Managed by a backend service/admin
+        allow update: if false; // Managed by a backend service/admin
+        allow delete: if false; // Managed by a backend service/admin
+      }
+
+      /**
+       * @description Customer reviews are public to read, but only the author can write them.
+       * @path /restaurants/{restaurantId}/customerReviews/{customerReviewId}
+       * @allow (create) Authenticated user creates a review with their own userId: `auth.uid == 'user_abc'`, `create` with `data.userId == 'user_abc'`
+       * @deny (update) A user tries to update another user's review: `auth.uid == 'user_abc'`, `update` document where `resource.data.userId == 'user_xyz'`
+       * @principle Enforces document ownership for writes while allowing public reads.
+       */
+      match /customerReviews/{customerReviewId} {
+        allow get, list: if true;
+        allow create: if isCreatingOwnContentForRestaurant(restaurantId);
+        allow update: if isExistingDocumentOwner(resource) && areAssociationFieldsImmutable();
+        allow delete: if isExistingDocumentOwner(resource);
+      }
+
+      /**
+       * @description Table reservations are private to the user who created them.
+       * @path /restaurants/{restaurantId}/tableReservations/{tableReservationId}
+       * @allow (get) Authenticated user reads their own reservation: `auth.uid == 'user_abc'`, `get` document where `resource.data.userId == 'user_abc'`
+       * @deny (get) A user tries to read another user's reservation: `auth.uid == 'user_abc'`, `get` document where `resource.data.userId == 'user_xyz'`
+       * @deny (list) Any user tries to list all reservations for the restaurant.
+       * @principle Enforces document ownership for all operations and protects user privacy by disallowing listing.
+       */
+      match /tableReservations/{tableReservationId} {
+        allow get: if isDocumentOwner(resource);
+        allow list: if false; // Protects user privacy by not exposing all reservations
+        allow create: if isCreatingOwnContentForRestaurant(restaurantId);
+        allow update: if isExistingDocumentOwner(resource) && areAssociationFieldsImmutable();
+        allow delete: if isExistingDocumentOwner(resource);
+      }
+    }
+  }
+}
