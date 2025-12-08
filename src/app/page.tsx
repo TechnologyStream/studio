@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardContent,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,7 +22,6 @@ import Image from 'next/image';
 import { HeroCarousel } from '@/components/common/hero-carousel';
 
 export default function Home() {
-  const heroImage = PlaceHolderImages.find((p) => p.id === 'hero-1');
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -232,8 +231,8 @@ export default function Home() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselNext className="hidden md:flex" />
+              <CarouselPrevious />
+              <CarouselNext />
             </Carousel>
           </div>
         </section>
