@@ -33,10 +33,12 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent } from '../ui/card';
-import { createReservation } from '@/app/reservations/actions';
-import { useUser, useAuth } from '@/firebase';
+import { useUser, useAuth, useFirestore, addDocumentNonBlocking } from '@/firebase';
 import { initiateAnonymousSignIn } from '@/firebase/non-blocking-login';
 import { useEffect } from 'react';
+import { collection } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
+
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -61,14 +63,53 @@ const formSchema = z.object({
 
 export type ReservationFormValues = z.infer<typeof formSchema>;
 
+async function createReservation(
+  firestore: any,
+  data: ReservationFormValues,
+  userId: string
+) {
+  try {
+    const restaurantId = 'main-restaurant'; 
+
+    const reservationData = {
+      id: uuidv4(),
+      restaurantId: restaurantId,
+      userId: userId,
+      reservationDateTime: new Date(
+        `${data.date.toISOString().split('T')[0]}T${data.time}:00`
+      ).toISOString(),
+      partySize: parseInt(data.partySize, 10),
+      status: 'Confirmed', 
+      customerName: data.name,
+      customerEmail: data.email,
+      customerPhone: data.phone,
+    };
+
+    const reservationsCol = collection(
+      firestore,
+      'restaurants',
+      restaurantId,
+      'tableReservations'
+    );
+    
+    addDocumentNonBlocking(reservationsCol, reservationData);
+
+    return { success: true, reservationId: reservationData.id };
+  } catch (error) {
+    console.error('Error creating reservation:', error);
+    return { success: false, error: 'Failed to create reservation.' };
+  }
+}
+
 export default function ReservationForm() {
   const { toast } = useToast();
   const { user, isUserLoading } = useUser();
   const auth = useAuth();
+  const firestore = useFirestore();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isUserLoading && !user) {
+    if (!isUserLoading && !user && auth) {
       initiateAnonymousSignIn(auth);
     }
   }, [user, isUserLoading, auth]);
@@ -89,13 +130,22 @@ export default function ReservationForm() {
         title: 'Authentication Error',
         description: 'You must be signed in to make a reservation. Please wait a moment and try again.',
       });
-      if (!isUserLoading) {
+      if (!isUserLoading && auth) {
         initiateAnonymousSignIn(auth);
       }
       return;
     }
 
-    const result = await createReservation(values, user.uid);
+    if (!firestore) {
+      toast({
+        variant: "destructive",
+        title: 'Database Error',
+        description: 'Could not connect to the database. Please try again later.',
+      });
+      return;
+    }
+
+    const result = await createReservation(firestore, values, user.uid);
 
     if (result.success) {
       toast({
@@ -209,7 +259,7 @@ export default function ReservationForm() {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a time slot" />
-                        </SelectTrigger>
+                        </Trigger>
                       </FormControl>
                       <SelectContent>
                         {Array.from({ length: 12 }, (_, i) => `${i + 12}:00`).map(time => (
@@ -231,7 +281,7 @@ export default function ReservationForm() {
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select party size" />
-                        </SelectTrigger>
+                        </Trigger>
                       </FormControl>
                       <SelectContent>
                         {Array.from({ length: 10 }, (_, i) => i + 1).map(size => (
