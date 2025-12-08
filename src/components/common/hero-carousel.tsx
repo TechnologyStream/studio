@@ -11,7 +11,7 @@ import Autoplay from 'embla-carousel-autoplay';
 
 export function HeroCarousel() {
   const heroImages = PlaceHolderImages.filter(p =>
-    ['hero-club', 'venue-skyclub', 'gallery-1', 'gallery-2'].includes(p.id)
+    ['hero-1', 'hero-2', 'hero-3', 'hero-4'].includes(p.id)
   );
 
   return (
